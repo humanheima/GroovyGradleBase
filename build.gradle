@@ -1,0 +1,85 @@
+task hello {
+    doLast {
+        println 'Hello world!'
+    }
+}
+
+def Task hello1 = task(hello1, group: BasePlugin.BUILD_GROUP)
+hello1.doLast {
+    println 'Hello1 world!'
+
+}
+
+/**
+ * go 任务依赖 hello 这个任务
+ */
+def Task go = task(go, dependsOn: hello)
+go.doLast {
+    println "go for it"
+}
+
+/**
+ * 动态定义任务
+ *
+ * 使用命令 gradle -q task0 task1 task2
+ *
+ * 输出结果
+ * Hello number = 0
+ * Hello number = 1
+ * Hello number = 2
+ *
+ */
+3.times { number ->
+
+    task "task$number" {
+        doLast {
+            println "Hello number = $number"
+        }
+    }
+
+}
+
+/**
+ * 任务的分组和描述
+ */
+def Task hello2 = task(hello2)
+
+hello2.description = "hello2 world"
+hello2.group = BasePlugin.BUILD_GROUP
+
+hello2.doLast {
+
+    println "任务分组: ${group}"
+    println "任务描述: ${description}"
+}
+
+task go1(dependsOn: hello2) {
+    doLast {
+        println "go2 for it"
+    }
+}
+
+task method{
+
+    doLast{
+        def p= new Person()
+        p.increaseAge(5)
+        println p.age
+    }
+
+}
+
+class Person {
+    String name
+    Integer age = 10
+
+    def increaseAge(Integer years) {
+        this.age += years
+    }
+}
+
+task method1 {
+    //assert 1+2 == 6
+    assert 1+2 == 3
+    println("assert true")
+}
