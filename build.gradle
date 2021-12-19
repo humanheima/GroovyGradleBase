@@ -1,3 +1,13 @@
+apply plugin: 'java'
+apply from : 'other.gradle'
+
+/*测试使用other.gradle这个插件*/
+task testUsePlugin {
+    doLast {
+        println "版本为：${verson},地址为：${url}"
+    }
+}
+
 task hello {
     doLast {
         println 'Hello world!'
@@ -7,6 +17,7 @@ task hello {
 def Task hello1 = task(hello1, group: BasePlugin.BUILD_GROUP)
 hello1.doLast {
     println 'Hello1 world!'
+    println group
 
 }
 
@@ -82,4 +93,24 @@ task method1 {
     //assert 1+2 == 6
     assert 1+2 == 3
     println("assert true")
+}
+
+//将闭包赋值给一个变量
+def onlyPrintln ={ it -> println it }
+assert onlyPrintln instanceof groovy.lang.Closure
+
+//将闭包赋值给Closure类型变量
+Closure doCloush= { println 'do!' }
+
+apply plugin:CustomPlugin
+
+class CustomPlugin implements Plugin<Project> {
+    @Override
+    void apply(Project project) {
+        project.task('CustomPluginTask') {
+            doLast {
+                println "自定义插件"
+            }
+        }
+    }
 }
